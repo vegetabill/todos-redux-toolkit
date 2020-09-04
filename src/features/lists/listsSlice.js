@@ -1,11 +1,12 @@
 import { createSlice, createSelector } from "@reduxjs/toolkit";
+import { selectCurrentListId } from "./currentListIdSlice";
 import { generate as newId } from "shortid";
 
 const createList = (name) => {
   return {
     id: newId(),
     name,
-    todoIds: [],
+    todoIds: [1],
   };
 };
 
@@ -36,6 +37,12 @@ export const listsSlice = createSlice({
 export const { add, remove, update } = listsSlice.actions;
 
 export const selectListsById = (state) => state.lists;
+
+export const selectCurrentList = createSelector(
+  [selectListsById, selectCurrentListId],
+  (byId, currentId) => byId[currentId]
+);
+
 export const selectAllListIds = createSelector([selectListsById], (listsById) =>
   Object.keys(listsById)
 );
