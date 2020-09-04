@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectAllLists } from "./listsSlice";
 import { selectCurrentListId, updateCurrentListId } from "./currentListIdSlice";
+import AddListForm from "./AddListForm";
 
 export default function ListMenu() {
   const lists = useSelector(selectAllLists);
@@ -33,15 +34,7 @@ export default function ListMenu() {
           </label>
         ))}
       </form>
-      <form>
-        <input
-          type="text"
-          name="listName"
-          required={true}
-          placeholder="Costco List"
-        />
-        <input type="submit" value="Create List" />
-      </form>
+      <AddListForm />
     </div>
   );
 }

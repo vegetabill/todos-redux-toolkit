@@ -6,11 +6,12 @@ const createList = (name) => {
   return {
     id: newId(),
     name,
-    todoIds: [1],
+    todoIds: [],
   };
 };
 
 const initialList = createList("My TODOS");
+initialList.todoIds = [1];
 
 export const listsSlice = createSlice({
   name: "lists",
@@ -18,23 +19,23 @@ export const listsSlice = createSlice({
     [initialList.id]: initialList,
   },
   reducers: {
-    add: (state, action) => {
+    addList: (state, action) => {
       const { name } = action.payload;
       const list = createList(name);
       state[list.id] = list;
     },
-    remove: (state, action) => {
+    deleteList: (state, action) => {
       const id = action.payload;
       state[id] = undefined;
     },
-    update: (state, action) => {
+    updateList: (state, action) => {
       const { id, name } = action.payload;
       state[id].name = name;
     },
   },
 });
 
-export const { add, remove, update } = listsSlice.actions;
+export const { addList, deleteList, updateList } = listsSlice.actions;
 
 export const selectListsById = (state) => state.lists;
 
