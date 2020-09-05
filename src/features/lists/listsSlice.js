@@ -1,5 +1,9 @@
-import { createSlice, createSelector } from "@reduxjs/toolkit";
-import { selectCurrentListId } from "./currentListIdSlice";
+import {
+  createSlice,
+  createSelector,
+  createAsyncThunk,
+} from "@reduxjs/toolkit";
+import { selectCurrentListId, updateCurrentListId } from "./currentListIdSlice";
 import { generate as newId } from "shortid";
 
 const createList = (name) => {
@@ -19,11 +23,6 @@ export const listsSlice = createSlice({
     [initialList.id]: initialList,
   },
   reducers: {
-    addList: (state, action) => {
-      const { name } = action.payload;
-      const list = createList(name);
-      state[list.id] = list;
-    },
     deleteList: (state, action) => {
       const id = action.payload;
       state[id] = undefined;
@@ -33,9 +32,30 @@ export const listsSlice = createSlice({
       state[id].name = name;
     },
   },
+  extraReducers: {
+    "lists/addList/fulfilled": (state, action) => {
+      const list = action.payload;
+      state[list.id] = list;
+    },
+  },
 });
 
-export const { addList, deleteList, updateList } = listsSlice.actions;
+export const { deleteList, updateList } = listsSlice.actions;
+
+export const addList = createAsyncThunk(
+  "lists/addList",
+  ({ name }, { dispatch }) => {
+    const list = createList(name);
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(list);
+      }, 100);
+    }).then((newList) => {
+      setTimeout(() => dispatch(updateCurrentListId(newList.id)), 100);
+      return newList;
+    });
+  }
+);
 
 export const selectListsById = (state) => state.lists;
 

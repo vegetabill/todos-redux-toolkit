@@ -9,6 +9,7 @@ export default function AddListForm() {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(addList({ name }));
+    setName("");
   };
   return (
     <form onSubmit={onSubmit}>

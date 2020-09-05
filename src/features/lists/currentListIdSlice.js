@@ -4,7 +4,7 @@ export const currentListIdSlice = createSlice({
   name: "currentListId",
   initialState: null,
   reducers: {
-    updateCurrentListId: (state, action) => {
+    updateCurrentListId: (_, action) => {
       return action.payload;
     },
   },

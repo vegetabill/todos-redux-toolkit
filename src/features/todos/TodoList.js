@@ -10,6 +10,7 @@ import {
   toggleCompletion,
 } from "./todosSlice";
 import { selectCurrentList } from "../lists/listsSlice";
+import EditableListTitle from "../lists/EditableListTitle";
 
 export default function TodoList() {
   const list = useSelector(selectCurrentList);
@@ -22,7 +23,7 @@ export default function TodoList() {
   return (
     <>
       <h2>
-        {list.name} ({totalCount})
+        <EditableListTitle list={list} /> ({totalCount})
       </h2>
       <h3>{totalCount - todos.length} currently hidden</h3>
       <FilterToolbar />
