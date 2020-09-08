@@ -1,32 +1,29 @@
 import { withDelay } from "./fake-async";
-import { createTodo } from "./todos-rest-client";
-import { add } from "../features/todos/todosSlice";
+import { nanoid } from "@reduxjs/toolkit";
 
 const lists = {};
 
 function createList(name) {
   lists[name] = {
-    id: newId(),
+    id: nanoid(),
     name,
-    todoIds: [],
   };
+  return lists[name];
 }
+
+//seed data
+createList("My TODOs");
 
 function fetchList(id) {
   return lists[id];
 }
 
-function addToList(listId, todoId) {
-  lists[listId].todos.push(todoId);
-}
-
-function addNewTodoToList(listId, todo) {
-  const savedTodo = await createTodo(todo);
-  addToList(listId, savedTodo.id);
+function fetchAllLists() {
+  return Object.values(lists);
 }
 
 export default {
   createList: withDelay(createList),
   fetchList: withDelay(fetchList),
-  addNewTodoToList: withDelay(addNewTodoToList)
+  fetchAllLists: withDelay(fetchAllLists),
 };

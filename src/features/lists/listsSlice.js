@@ -3,22 +3,11 @@ import {
   createSelector,
   createAsyncThunk,
 } from "@reduxjs/toolkit";
-import { nanoid } from "@reduxjs/toolkit";
-
-const createList = (name) => {
-  return {
-    id: nanoid(),
-    name,
-  };
-};
-
-const initialList = createList("My TODOS");
+import ListApi from "../../api/todo-list-client";
 
 export const listsSlice = createSlice({
   name: "lists",
-  initialState: {
-    [initialList.id]: initialList,
-  },
+  initialState: {},
   reducers: {
     deleteList: (state, action) => {
       const id = action.payload;
@@ -34,19 +23,25 @@ export const listsSlice = createSlice({
       const list = action.payload;
       state[list.id] = list;
     },
+    "lists/fetchAllLists/fulfilled": (_, action) => {
+      const lists = action.payload;
+      return lists.reduce((result, list) => {
+        result[list.id] = list;
+        return result;
+      }, {});
+    },
   },
 });
 
 export const { deleteList, updateList } = listsSlice.actions;
 
-export const addList = createAsyncThunk("lists/addList", ({ name }) => {
-  const list = createList(name);
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(list);
-    }, 100);
-  });
-});
+export const addList = createAsyncThunk("lists/addList", ({ name }) =>
+  ListApi.createList(name)
+);
+
+export const fetchAllLists = createAsyncThunk("lists/fetchAllLists", () =>
+  ListApi.fetchAllLists()
+);
 
 export const selectListsById = (state) => state.lists;
 

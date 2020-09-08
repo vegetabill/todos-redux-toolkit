@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectAllLists } from "../lists/listsSlice";
+import { selectAllLists, fetchAllLists } from "../lists/listsSlice";
 import { selectActiveListId, updateActiveListId } from "./activeListIdSlice";
 import AddListForm from "../lists/AddListForm";
 
@@ -10,11 +10,10 @@ export default function ListMenu() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!currentId && lists) {
-      const firstId = lists[0].id;
-      dispatch(updateActiveListId(firstId));
+    if (lists.length === 0) {
+      dispatch(fetchAllLists());
     }
-  }, [currentId, lists, dispatch]);
+  }, [lists, dispatch]);
 
   return (
     <div className="listsMenu">

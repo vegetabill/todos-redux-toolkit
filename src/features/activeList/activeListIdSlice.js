@@ -13,6 +13,16 @@ export const activeListIdSlice = createSlice({
       const list = action.payload;
       return list.id;
     },
+    "lists/fetchAllLists/fulfilled": (currentId, action) => {
+      if (!currentId) {
+        const allLists = action.payload;
+        const firstList = allLists[0];
+        if (firstList) {
+          return firstList.id;
+        }
+      }
+      return currentId;
+    },
   },
 });
 

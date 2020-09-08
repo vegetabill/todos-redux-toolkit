@@ -1,7 +1,8 @@
 export function withDelay(wrappedFunc) {
   return (...args) => {
+    console.debug(`[Fake API] call to ${wrappedFunc.name}`);
     return new Promise((resolve, reject) => {
-      setInterval(() => {
+      setTimeout(() => {
         try {
           resolve(wrappedFunc(...args));
         } catch (e) {

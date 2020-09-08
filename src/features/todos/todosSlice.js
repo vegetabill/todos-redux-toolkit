@@ -1,29 +1,39 @@
-import { createSlice, createSelector } from "@reduxjs/toolkit";
-import { nanoid } from "@reduxjs/toolkit";
-
-const buildNew = ({ text, listId }) => {
-  return { id: nanoid(), text, completed: false, listId };
-};
+import {
+  createSlice,
+  createSelector,
+  createAsyncThunk,
+} from "@reduxjs/toolkit";
+import TodosApi from "../../api/todos-rest-client";
 
 export const todosSlice = createSlice({
   name: "todos",
   initialState: {},
-  reducers: {
-    createTodo: (state, action) => {
-      const {
-        payload: { text, listId },
-      } = action;
-      const todo = buildNew({ text, listId });
+  extraReducers: {
+    "todos/createTodo/fulfilled": (state, action) => {
+      const todo = action.payload;
       state[todo.id] = todo;
     },
-    toggleCompletion: (state, { payload: { id } }) => {
-      const todo = state[id];
-      todo.completed = !todo.completed;
+    "todos/updateTodo/fulfilled": (state, action) => {
+      const todo = action.payload;
+      state[todo.id] = todo;
     },
   },
 });
 
-export const { createTodo, toggleCompletion } = todosSlice.actions;
+export const createTodo = createAsyncThunk("todos/createTodo", (todo) =>
+  TodosApi.createTodo(todo)
+);
+
+export const updateTodo = createAsyncThunk("todos/updateTodo", (todo) =>
+  TodosApi.updateTodo(todo)
+);
+
+export const toggleCompletion = (todo) => {
+  return (dispatch) => {
+    const updatedTodo = { ...todo, completed: !todo.completed };
+    dispatch(updateTodo(updatedTodo));
+  };
+};
 
 export const selectTodosById = (state) => state.todos;
 

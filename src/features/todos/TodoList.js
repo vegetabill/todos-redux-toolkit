@@ -31,7 +31,7 @@ export default function TodoList() {
           <Todo
             key={todo.id}
             todo={todo}
-            onToggle={() => dispatch(toggleCompletion({ id: todo.id }))}
+            onToggle={() => dispatch(toggleCompletion(todo))}
           />
         ))}
       </ul>
