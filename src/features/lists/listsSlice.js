@@ -3,19 +3,16 @@ import {
   createSelector,
   createAsyncThunk,
 } from "@reduxjs/toolkit";
-import { selectCurrentListId, updateCurrentListId } from "./currentListIdSlice";
-import { generate as newId } from "shortid";
+import { nanoid } from "@reduxjs/toolkit";
 
 const createList = (name) => {
   return {
-    id: newId(),
+    id: nanoid(),
     name,
-    todoIds: [],
   };
 };
 
 const initialList = createList("My TODOS");
-initialList.todoIds = [1];
 
 export const listsSlice = createSlice({
   name: "lists",
@@ -42,31 +39,21 @@ export const listsSlice = createSlice({
 
 export const { deleteList, updateList } = listsSlice.actions;
 
-export const addList = createAsyncThunk(
-  "lists/addList",
-  ({ name }, { dispatch }) => {
-    const list = createList(name);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(list);
-      }, 100);
-    }).then((newList) => {
-      setTimeout(() => dispatch(updateCurrentListId(newList.id)), 100);
-      return newList;
-    });
-  }
-);
+export const addList = createAsyncThunk("lists/addList", ({ name }) => {
+  const list = createList(name);
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(list);
+    }, 100);
+  });
+});
 
 export const selectListsById = (state) => state.lists;
-
-export const selectCurrentList = createSelector(
-  [selectListsById, selectCurrentListId],
-  (byId, currentId) => byId[currentId]
-);
 
 export const selectAllListIds = createSelector([selectListsById], (listsById) =>
   Object.keys(listsById)
 );
+
 export const makeSelectList = (listId) => {
   return createSelector([selectListsById], (listsById) => listsById[listId]);
 };

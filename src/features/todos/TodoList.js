@@ -1,19 +1,18 @@
 import React from "react";
 import Todo from "./Todo";
 import AddTodoForm from "./AddTodoForm";
-import FilterToolbar from "./FilterToolbar";
+import FilterToolbar from "../activeList/FilterToolbar";
 import { useSelector, useDispatch } from "react-redux";
+import { createTodo, toggleCompletion } from "./todosSlice";
 import {
+  selectActiveList,
   selectTotalCount,
   selectVisibleTodos,
-  add,
-  toggleCompletion,
-} from "./todosSlice";
-import { selectCurrentList } from "../lists/listsSlice";
-import EditableListTitle from "../lists/EditableListTitle";
+} from "../activeList/activeListSelectors";
+import EditableListTitle from "../activeList/EditableListTitle";
 
 export default function TodoList() {
-  const list = useSelector(selectCurrentList);
+  const list = useSelector(selectActiveList);
   const todos = useSelector(selectVisibleTodos);
   const totalCount = useSelector(selectTotalCount);
   const dispatch = useDispatch();
@@ -36,7 +35,9 @@ export default function TodoList() {
           />
         ))}
       </ul>
-      <AddTodoForm onAdd={({ text }) => dispatch(add({ text }))} />
+      <AddTodoForm
+        onAdd={({ text }) => dispatch(createTodo({ text, listId: list.id }))}
+      />
     </>
   );
 }

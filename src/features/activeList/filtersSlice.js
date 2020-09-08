@@ -19,7 +19,7 @@ export const FilterFunctions = {
 };
 
 export const filtersSlice = createSlice({
-  name: "activeFilter",
+  name: "filter",
   initialState: FilterTypes.SHOW_ALL,
   reducers: {
     updateFilter(_, action) {
@@ -30,6 +30,6 @@ export const filtersSlice = createSlice({
 
 export const { updateFilter } = filtersSlice.actions;
 
-export const selectActiveFilter = ({ activeFilter }) => activeFilter;
+export const selectFilter = (state) => state.activeList.filter;
 
 export default filtersSlice.reducer;

@@ -1,6 +1,5 @@
 import { withDelay } from "./fake-async";
 import { createTodo } from "./todos-rest-client";
-import { generate as newId } from "shortid";
 import { add } from "../features/todos/todosSlice";
 
 const lists = {};

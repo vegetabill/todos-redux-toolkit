@@ -1,27 +1,19 @@
 import { createSlice, createSelector } from "@reduxjs/toolkit";
-import { generate as newId } from "shortid";
-import { FilterFunctions, selectActiveFilter } from "./filtersSlice";
-import { selectCurrentList } from "../lists/listsSlice";
+import { nanoid } from "@reduxjs/toolkit";
 
-const createTodo = ({ text }) => {
-  return { id: newId(), text, completed: false };
+const buildNew = ({ text, listId }) => {
+  return { id: nanoid(), text, completed: false, listId };
 };
 
 export const todosSlice = createSlice({
   name: "todos",
-  initialState: {
-    1: {
-      id: 1,
-      text: "Brush a dangerous pom",
-      completed: false,
-    },
-  },
+  initialState: {},
   reducers: {
-    add: (state, action) => {
+    createTodo: (state, action) => {
       const {
-        payload: { text },
+        payload: { text, listId },
       } = action;
-      const todo = createTodo({ text });
+      const todo = buildNew({ text, listId });
       state[todo.id] = todo;
     },
     toggleCompletion: (state, { payload: { id } }) => {
@@ -31,34 +23,16 @@ export const todosSlice = createSlice({
   },
 });
 
-export const { add, toggleCompletion } = todosSlice.actions;
+export const { createTodo, toggleCompletion } = todosSlice.actions;
 
 export const selectTodosById = (state) => state.todos;
+
+export const selectAllTodos = createSelector([selectTodosById], (todosById) =>
+  Object.values(todosById)
+);
 
 export const makeSelectTodos = (...ids) => {
   return createSelector([selectTodosById], (byId) => ids.map((id) => byId[id]));
 };
-
-export const selectTodosOnCurrentList = createSelector(
-  [selectCurrentList, selectTodosById],
-  (list, todosById) => {
-    if (!list) {
-      return [];
-    }
-    return list.todoIds.map((id) => todosById[id]);
-  }
-);
-
-export const selectTotalCount = createSelector(
-  [selectTodosOnCurrentList],
-  (todos) => todos.length
-);
-
-export const selectVisibleTodos = createSelector(
-  [selectTodosOnCurrentList, selectActiveFilter],
-  (todos, activeFilter) => {
-    return todos.filter(FilterFunctions[activeFilter]);
-  }
-);
 
 export default todosSlice.reducer;

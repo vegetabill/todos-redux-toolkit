@@ -1,10 +1,10 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FilterLabels, updateFilter, selectActiveFilter } from "./filtersSlice";
+import { FilterLabels, updateFilter, selectFilter } from "./filtersSlice";
 
 export default function FilterToolbar() {
   const dispatch = useDispatch();
-  const activeFilter = useSelector(selectActiveFilter);
+  const activeFilter = useSelector(selectFilter);
   return (
     <form className="filtersForm">
       <select
