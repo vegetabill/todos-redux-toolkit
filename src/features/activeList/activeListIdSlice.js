@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { addList, fetchAllLists } from "../lists/listsSlice";
 
 export const activeListIdSlice = createSlice({
   name: "activeListId",
@@ -9,11 +10,11 @@ export const activeListIdSlice = createSlice({
     },
   },
   extraReducers: {
-    "lists/addList/fulfilled": (_, action) => {
+    [addList.fulfilled]: (_, action) => {
       const list = action.payload;
       return list.id;
     },
-    "lists/fetchAllLists/fulfilled": (currentId, action) => {
+    [fetchAllLists.fulfilled]: (currentId, action) => {
       if (!currentId) {
         const allLists = action.payload;
         const firstList = allLists[0];

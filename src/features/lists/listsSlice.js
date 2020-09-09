@@ -5,6 +5,14 @@ import {
 } from "@reduxjs/toolkit";
 import ListApi from "../../api/todo-list-client";
 
+export const addList = createAsyncThunk("lists/addList", ({ name }) =>
+  ListApi.createList(name)
+);
+
+export const fetchAllLists = createAsyncThunk("lists/fetchAllLists", () =>
+  ListApi.fetchAllLists()
+);
+
 export const listsSlice = createSlice({
   name: "lists",
   initialState: {},
@@ -19,11 +27,11 @@ export const listsSlice = createSlice({
     },
   },
   extraReducers: {
-    "lists/addList/fulfilled": (state, action) => {
+    [addList.fulfilled]: (state, action) => {
       const list = action.payload;
       state[list.id] = list;
     },
-    "lists/fetchAllLists/fulfilled": (_, action) => {
+    [fetchAllLists.fulfilled]: (_, action) => {
       const lists = action.payload;
       return lists.reduce((result, list) => {
         result[list.id] = list;
@@ -34,14 +42,6 @@ export const listsSlice = createSlice({
 });
 
 export const { deleteList, updateList } = listsSlice.actions;
-
-export const addList = createAsyncThunk("lists/addList", ({ name }) =>
-  ListApi.createList(name)
-);
-
-export const fetchAllLists = createAsyncThunk("lists/fetchAllLists", () =>
-  ListApi.fetchAllLists()
-);
 
 export const selectListsById = (state) => state.lists;
 

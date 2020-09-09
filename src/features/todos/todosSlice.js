@@ -5,21 +5,6 @@ import {
 } from "@reduxjs/toolkit";
 import TodosApi from "../../api/todos-rest-client";
 
-export const todosSlice = createSlice({
-  name: "todos",
-  initialState: {},
-  extraReducers: {
-    "todos/createTodo/fulfilled": (state, action) => {
-      const todo = action.payload;
-      state[todo.id] = todo;
-    },
-    "todos/updateTodo/fulfilled": (state, action) => {
-      const todo = action.payload;
-      state[todo.id] = todo;
-    },
-  },
-});
-
 export const createTodo = createAsyncThunk("todos/createTodo", (todo) =>
   TodosApi.createTodo(todo)
 );
@@ -27,6 +12,21 @@ export const createTodo = createAsyncThunk("todos/createTodo", (todo) =>
 export const updateTodo = createAsyncThunk("todos/updateTodo", (todo) =>
   TodosApi.updateTodo(todo)
 );
+
+export const todosSlice = createSlice({
+  name: "todos",
+  initialState: {},
+  extraReducers: {
+    [createTodo.fulfilled]: (state, action) => {
+      const todo = action.payload;
+      state[todo.id] = todo;
+    },
+    [updateTodo.fulfilled]: (state, action) => {
+      const todo = action.payload;
+      state[todo.id] = todo;
+    },
+  },
+});
 
 export const toggleCompletion = (todo) => {
   return (dispatch) => {
